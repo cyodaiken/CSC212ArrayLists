@@ -59,8 +59,6 @@ public class FixedSizeList<T> extends ListADT<T> {
 	public T getFront() {
 
 		this.checkNotEmpty();
-
-		array.getIndex(0);
 		return array.getIndex(0);
 	}
 
@@ -68,9 +66,7 @@ public class FixedSizeList<T> extends ListADT<T> {
 	public T getBack() {
 
 		this.checkNotEmpty();
-
-		array.getIndex(array.size()-1);
-		return array.getIndex(array.size()-1);
+		return array.getIndex(this.size()-1);
 	}
 
 	@Override
@@ -83,14 +79,12 @@ public class FixedSizeList<T> extends ListADT<T> {
 		} else {
 			// slide to the right
 			for (int i = this.fill; i > index; i--) {
-				//System.out.println("getindex i-1="+(i-1));
-				//System.out.println("getindex="+getIndex((i-1)));
 				array.setIndex(i, array.getIndex(i-1));
 				
 				//System.out.println("ARRAY:" + this.array);
 			}
 			array.setIndex(index, value);
-			fill += 1;
+			this.fill += 1;
 			System.out.println("FINAL ARRAY: " + this.array);
 		}
 	}
@@ -124,13 +118,21 @@ public class FixedSizeList<T> extends ListADT<T> {
 
 	@Override
 	public T removeBack() {
+		
 		this.checkNotEmpty();
+		
+		/*
+		 * T last = this.array.getIndex(this.size() - 1); this.fill -= 1;
+		 * this.array.setIndex(fill, null); return last;
+		 */
+		
+		
 		return removeIndex(this.size() - 1);
 	}
 
 	@Override
 	public T removeFront() {
-		this.checkNotEmpty();
+		
 		return removeIndex(0);
 	}
 
