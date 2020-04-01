@@ -43,8 +43,8 @@ public class FixedSizeListTest {
 
 	@Test
 	public void testAddToFront() {
+
 		
-		System.out.println("ADD TO FRONT");
 		ListADT<String> data = new FixedSizeList<String>(4);
 		Assert.assertEquals(true, data.isEmpty());
 		data.addFront("1");
@@ -73,8 +73,8 @@ public class FixedSizeListTest {
 	@Test
 	public void testAddToBack() {
 		ListADT<String> data = new FixedSizeList<String>(4);
-		
-		System.out.println("ADD TO BACK");
+
+	
 		data.addBack("1");
 		Assert.assertEquals(1, data.size());
 		Assert.assertEquals("1", data.getIndex(0));
@@ -166,23 +166,21 @@ public class FixedSizeListTest {
 
 	@Test
 	public void testAddIndexFront() {
-		System.out.println("INDEX FRONT");
+
 		ListADT<String> data = new FixedSizeList<>(10);
 		data.addBack("A");
 		Assert.assertEquals(1, data.size());
 		Assert.assertEquals("A", data.getFront());
 		data.addIndex(0, "B");
-		System.out.println("DATA: " + data);
 		Assert.assertEquals(2, data.size());
 		Assert.assertEquals("B", data.getFront());
-		System.out.println("GETBACK: " + data.getBack());
 		Assert.assertEquals("A", data.getBack());
-		System.out.println("-------------------");
+
 	}
 
 	@Test
 	public void testAddIndexBack() {
-		System.out.println("INDEX BACK");
+
 		ListADT<String> data = new FixedSizeList<>(10);
 		data.addBack("A");
 		Assert.assertEquals(1, data.size());
@@ -201,7 +199,6 @@ public class FixedSizeListTest {
 		data.addBack("D");
 		data.addBack("E");
 		Assert.assertEquals(4, data.size());
-
 		data.addIndex(1, "B");
 		Assert.assertEquals(5, data.size());
 		Assert.assertEquals("B", data.getIndex(1));

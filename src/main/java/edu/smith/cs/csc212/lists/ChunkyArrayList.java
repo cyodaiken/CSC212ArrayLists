@@ -38,12 +38,18 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 
 	@Override
 	public T removeFront() {
-		throw new TODOErr();
+		//throw new TODOErr();
+		this.checkNotEmpty();
+		return removeIndex(0);
 	}
 
 	@Override
 	public T removeBack() {
-		throw new TODOErr();
+		//throw new TODOErr();
+		this.checkNotEmpty();
+		
+	
+		return removeIndex(0);
 	}
 
 	@Override

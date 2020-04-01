@@ -51,7 +51,15 @@ public class GrowableList<T> extends ListADT<T> {
 	@Override
 	public T removeIndex(int index) {
 		// slide to the left
-		throw new TODOErr();
+		
+		this.checkNotEmpty();
+		T item = array.getIndex(index);
+		for (int i = index; i < array.size()-1; i++) {
+			array.setIndex(i, array.getIndex(i+1));
+		}
+		array.setIndex(array.size()-1, null);
+		fill -= 1;
+		return item;
 	}
 
 	@Override
@@ -71,16 +79,33 @@ public class GrowableList<T> extends ListADT<T> {
 	 * This private method is called when we need to make room in our GrowableList.
 	 */
 	private void resizeArray() {
-		// TODO: use this where necessary (already called in addBack!)
-		throw new TODOErr();
+	
+		ArrayWrapper<T> bigger = new ArrayWrapper<>(this.array.size() * 2);
+		for (int i = 0; i < this.array.size(); i++) {
+			bigger.setIndex(i, this.array.getIndex(i));
+		}
+		
+		this.array = bigger;
+		
 	}
 
 	@Override
 	public void addIndex(int index, T item) {
 		// slide to the right
-		throw new TODOErr();
-	}
+		//throw new TODOErr();
+		
+		if (fill >= array.size()) {
+			this.resizeArray();
+		}
+		this.checkInclusiveIndex(index);
+		for (int i = this.fill; i > index; i--) {
+			array.setIndex(i, array.getIndex(i-1));
+		}
+		array.setIndex(index, item);
+		this.fill += 1;
 
+	}
+		
 	@Override
 	public T getFront() {
 		checkNotEmpty();
