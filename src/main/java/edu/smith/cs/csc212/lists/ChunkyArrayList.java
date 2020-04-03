@@ -59,37 +59,33 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 		if (back.isEmpty()) {
 			chunks.removeBack();
 		}
-
 		return value;
 	}
 
 	@Override
 	public T removeIndex(int index) {
-		
-		throw new TODOErr();
-		/*
-		 * System.out.println("TEST");
-		 * 
-		 * this.checkNotEmpty();
-		 * 
-		 * for (FixedSizeList<T> chunk1 : this.chunks) {
-		 * 
-		 * System.out.println("removeINDEXStart1: "); System.out.println(chunk1); }
-		 * 
-		 * System.out.println(chunks.getIndex(index));
-		 * 
-		 * FixedSizeList<T> remove = chunks.getIndex(index);
-		 * 
-		 * T value = remove.removeIndex(index); System.out.println("VALUE" + value);
-		 * 
-		 * if (remove.isEmpty()) { chunks.removeIndex(index); }
-		 * 
-		 * for (FixedSizeList<T> chunk1 : this.chunks) {
-		 * 
-		 * System.out.println("removeINDEX: "); System.out.println(chunk1); }
-		 * 
-		 * return value;
-		 */
+
+		this.checkNotEmpty();
+
+		T value = null; 
+		int counter = -1; 
+		int chunkIndex = -1;
+		for (FixedSizeList<T> chunk : this.chunks) {
+			chunkIndex++;
+			for( int i = 0; i < chunkSize; i++) {
+				if ( i < chunk.size()) { 
+					counter++; 
+					if (index == counter ) {
+						value = chunk.removeIndex(i);
+						if (chunk.isEmpty()) {
+							chunks.removeIndex(chunkIndex);
+						}
+					}
+
+				}
+			}
+		}
+		return value;
 	}
 
 	@Override
@@ -98,10 +94,8 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 		if (chunks.isEmpty()) {
 			chunks.addBack(makeChunk());
 		}
-
 		// get first chunk 
 		FixedSizeList<T> front = chunks.getFront();
-
 		// no space
 		if (front.isFull()) {
 			front = makeChunk();
@@ -119,7 +113,6 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 		}
 		// get first chunk 
 		FixedSizeList<T> back = chunks.getBack();
-
 		// no space
 		if (back.isFull()) {
 			back = makeChunk();
@@ -127,17 +120,19 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 		}
 		// is space
 		back.addBack(item);
-
 	}
 
 	@Override
 	public void addIndex(int index, T item) {
-		// THIS IS THE HARDEST METHOD IN CHUNKY-ARRAY-LIST.
-		// DO IT LAST.
+
+		this.checkInclusiveIndex(index);
 
 		int chunkIndex = 0;
 		int start = 0;
+
 		for (FixedSizeList<T> chunk : this.chunks) {
+
+			chunkIndex++;
 			// calculate bounds of this chunk.
 			int end = start + chunk.size();
 
@@ -145,14 +140,22 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 			if (start <= index && index <= end) {
 				if (chunk.isFull()) {
 					// check can roll to next
-					// or need a new chunk
-					throw new TODOErr();
+					// or need a new chunk	
+					if (index == end) { 
+						this.chunks.getIndex(chunkIndex).addFront(item); 
+					} else {
+						chunks.addIndex(chunkIndex, makeChunk()); 
+						T roll = chunk.removeBack();
+						this.chunks.getIndex(chunkIndex).addFront(roll);	
+						chunk.addIndex(index-start, item);
+					}
+
 				} else {
 					// put right in this chunk, there's space.
-					throw new TODOErr();
+					chunk.addIndex(index, item);
 				}	
 				// upon adding, return.
-				// return;
+				return;
 			}
 
 			// update bounds of next chunk.
@@ -160,6 +163,7 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 			chunkIndex++;
 		}
 		throw new BadIndexError(index);
+
 	}
 
 	@Override
@@ -182,12 +186,10 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 		for (FixedSizeList<T> chunk : this.chunks) {
 			// calculate bounds of this chunk.
 			int end = start + chunk.size();
-
 			// Check whether the index should be in this chunk:
 			if (start <= index && index < end) {
 				return chunk.getIndex(index - start);
 			}
-
 			// update bounds of next chunk.
 			start = end;
 		}
@@ -195,84 +197,33 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 	}
 
 	@Override
+	/**
+	 * There is the external index (what gets passed in), the chunk number,
+	 * and the chunk element number. We have to translate the external
+	 * index to the chunk element number. We can use chunk.size() 
+	 * because it is the number of elements in each chunk that is filled 
+	 * (not null). If we use a counter variable that increments for each
+	 * filled element in a chunk, we can compare that number with the 
+	 * external index.  
+	 */
 	public void setIndex(int index, T value) {
 
 		this.checkNotEmpty();
 		this.checkExclusiveIndex(index);
-		
-		
-		  int counter = -1; 
-		  for (FixedSizeList<T> chunk : this.chunks) {
-			  System.out.println("new chunk");
-			  for( int i = 0; i < chunkSize; i++) {
-		  
-				  if ( i < chunk.size()) { 
-					  counter++; 
-					  System.out.println("COUNTER: " + counter);
-					  if (index == counter ) {
-						  chunk.setIndex(i, value);
-						  System.out.println("set");
-						  
-					  } else {
-						  
-						  System.out.println("notset" + "index" + index + "counter" + counter); 
-					  }
-					  
-					  
-				  
-				  }
-				  
-				  
-				  
-		 
-				//if (index == i ) {
 
-					//System.out.println("i: " + i);
+		int counter = -1; 
+		for (FixedSizeList<T> chunk : this.chunks) {
+			for( int i = 0; i < chunkSize; i++) {
+				if ( i < chunk.size()) { 
+					counter++; 
 
-				//	chunk.setIndex(index, value);
-				//	a = true; 
-
-					//for (FixedSizeList<T> chunk1 : this.chunks) {
-
-						//System.out.println("INSIDE LOOP: "); 
-						//System.out.println(chunk1);
-					//}	
-				//}
+					if (index == counter ) {
+						chunk.setIndex(i, value);  
+					} 
+				}
 			}
-
 		}
-		System.out.println("COUNTER: " + counter + " SIZE: " + size());
-		
-		
 	}
-
-	/*			if (index < chunk.size()) {
-
-				chunk.setIndex(index, value);
-
-				break;
-			}
-			index -= chunk.size();	
-		}
-
-		chunk.setIndex(index, value);*/
-
-	// calculate bounds of this chunk.
-	/*
-	 * int end = start + chunk.size();
-	 * 
-	 * System.out.println("NEW CHUNK:"); System.out.println("SIZE: " +
-	 * chunk.size());
-	 * 
-	 * System.out.println("end: " + end);
-	 */
-
-	// Check whether the index should be in this chunk:
-	/*
-	 * if (start <= index && index < end) { chunk.setIndex(index - start, value); }
-	 */
-
-
 
 	@Override
 	public int size() {

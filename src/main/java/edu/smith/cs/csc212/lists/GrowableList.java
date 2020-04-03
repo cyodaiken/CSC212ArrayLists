@@ -51,7 +51,7 @@ public class GrowableList<T> extends ListADT<T> {
 	@Override
 	public T removeIndex(int index) {
 		// slide to the left
-		
+
 		this.checkNotEmpty();
 		T item = array.getIndex(index);
 		for (int i = index; i < array.size()-1; i++) {
@@ -79,20 +79,19 @@ public class GrowableList<T> extends ListADT<T> {
 	 * This private method is called when we need to make room in our GrowableList.
 	 */
 	private void resizeArray() {
-	
+
 		ArrayWrapper<T> bigger = new ArrayWrapper<>(this.array.size() * 2);
 		for (int i = 0; i < this.array.size(); i++) {
 			bigger.setIndex(i, this.array.getIndex(i));
 		}
-		
 		this.array = bigger;
-		
 	}
 
 	@Override
 	public void addIndex(int index, T item) {
 		// slide to the right
-		
+		this.checkInclusiveIndex(index);
+
 		if (fill >= array.size()) {
 			this.resizeArray();
 		}
@@ -104,7 +103,7 @@ public class GrowableList<T> extends ListADT<T> {
 		this.fill += 1;
 
 	}
-		
+
 	@Override
 	public T getFront() {
 		checkNotEmpty();

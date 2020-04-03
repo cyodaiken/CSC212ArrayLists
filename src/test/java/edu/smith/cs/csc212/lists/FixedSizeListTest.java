@@ -44,7 +44,7 @@ public class FixedSizeListTest {
 	@Test
 	public void testAddToFront() {
 
-		
+
 		ListADT<String> data = new FixedSizeList<String>(4);
 		Assert.assertEquals(true, data.isEmpty());
 		data.addFront("1");
@@ -74,7 +74,7 @@ public class FixedSizeListTest {
 	public void testAddToBack() {
 		ListADT<String> data = new FixedSizeList<String>(4);
 
-	
+
 		data.addBack("1");
 		Assert.assertEquals(1, data.size());
 		Assert.assertEquals("1", data.getIndex(0));

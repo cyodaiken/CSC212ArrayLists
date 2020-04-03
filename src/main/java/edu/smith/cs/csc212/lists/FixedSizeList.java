@@ -82,7 +82,7 @@ public class FixedSizeList<T> extends ListADT<T> {
 			}
 			array.setIndex(index, value);
 			this.fill += 1;
-	
+
 		}
 	}
 
