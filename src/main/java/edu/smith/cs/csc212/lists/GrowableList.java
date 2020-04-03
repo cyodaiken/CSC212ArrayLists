@@ -92,7 +92,6 @@ public class GrowableList<T> extends ListADT<T> {
 	@Override
 	public void addIndex(int index, T item) {
 		// slide to the right
-		//throw new TODOErr();
 		
 		if (fill >= array.size()) {
 			this.resizeArray();

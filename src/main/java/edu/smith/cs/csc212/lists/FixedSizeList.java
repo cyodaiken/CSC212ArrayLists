@@ -118,8 +118,10 @@ public class FixedSizeList<T> extends ListADT<T> {
 
 		this.checkNotEmpty();
 		/*
-		 * T last = this.array.getIndex(this.size() - 1); this.fill -= 1;
-		 * this.array.setIndex(fill, null); return last;
+		 * T last = this.array.getIndex(this.size() - 1); 
+		 * this.fill -= 1;
+		 * this.array.setIndex(fill, null); 
+		 * return last;
 		 */
 		return removeIndex(this.size() - 1);
 	}

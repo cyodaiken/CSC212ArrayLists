@@ -181,6 +181,7 @@ public class ChunkyArrayListTest {
 	
 	@Test
 	public void testRemoveFront() {
+		
 		ListADT<String> data = makeABCDList();
 		Assert.assertEquals(4, data.size());
 		Assert.assertEquals("a", data.removeFront());
