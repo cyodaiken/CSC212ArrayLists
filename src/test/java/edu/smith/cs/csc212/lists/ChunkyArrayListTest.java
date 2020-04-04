@@ -169,11 +169,13 @@ public class ChunkyArrayListTest {
 		ListADT<Integer> items2 = makeEmptyList();
 
 		// If this test runs forever, make sure removeIndex actually removes things.
+		
 		while(!items1.isEmpty()) {
 			int value = items1.removeIndex(rand.nextInt(items1.size()));
 			insertSorted(items2, value);
+			
 		}
-
+	
 		for (int i=0; i<GrowableList.START_SIZE*5; i++) {
 			Assert.assertEquals((i+1)*3, (int) items2.getIndex(i)); 
 		}

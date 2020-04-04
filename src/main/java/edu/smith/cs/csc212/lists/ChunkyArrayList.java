@@ -125,14 +125,17 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 	@Override
 	public void addIndex(int index, T item) {
 
-		this.checkInclusiveIndex(index);
-
 		int chunkIndex = 0;
 		int start = 0;
 
+		System.out.println("original chunk: " + this.chunks);
+		System.out.println("index: " + index);
+		System.out.println("item: " + item);
+		System.out.println("size: " + chunks.size());
+
 		for (FixedSizeList<T> chunk : this.chunks) {
 
-			chunkIndex++;
+
 			// calculate bounds of this chunk.
 			int end = start + chunk.size();
 
@@ -141,18 +144,61 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 				if (chunk.isFull()) {
 					// check can roll to next
 					// or need a new chunk	
-					if (index == end) { 
-						this.chunks.getIndex(chunkIndex).addFront(item); 
+					if (index == end) { 	
+
+						if((chunkIndex + 1) == this.chunks.size()) {
+
+							chunks.addIndex(chunkIndex + 1, makeChunk());
+							this.chunks.getIndex(chunkIndex + 1).addFront(item);
+							System.out.println("END filled next not there: " + this.chunks);
+						}
+
+						else if(this.chunks.getIndex(chunkIndex + 1).size() == chunkSize) {
+							chunks.addIndex(chunkIndex + 1, makeChunk());
+							this.chunks.getIndex(chunkIndex + 1).addFront(item);
+							System.out.println("END filled next is filled: " + this.chunks);
+
+						} else {
+							this.chunks.getIndex(chunkIndex + 1).addFront(item);
+							//System.out.println("END filled next isn't filled: " + this.chunks);
+						}
+
 					} else {
-						chunks.addIndex(chunkIndex, makeChunk()); 
-						T roll = chunk.removeBack();
-						this.chunks.getIndex(chunkIndex).addFront(roll);	
-						chunk.addIndex(index-start, item);
+
+						if ((chunkIndex + 1) == this.chunks.size()) {
+							chunks.addIndex(chunkIndex + 1, makeChunk()); 
+							T roll = chunk.removeBack();
+							this.chunks.getIndex(chunkIndex + 1).addFront(roll);	
+							chunk.addIndex(index-start, item);
+							//System.out.println("INDEX filled next not there: " + this.chunks);	
+
+						}  else if(this.chunks.getIndex(chunkIndex + 1).size() == chunkSize) {
+
+							chunks.addIndex(chunkIndex + 1, makeChunk()); 
+							T roll = chunk.removeBack();
+							this.chunks.getIndex(chunkIndex + 1).addFront(roll);	
+							chunk.addIndex(index-start, item);
+							//System.out.println("INDEX filled next is filled: " + this.chunks);	
+						} else {			
+
+							T roll = chunk.removeBack();
+							this.chunks.getIndex(chunkIndex + 1).addFront(roll);	
+							chunk.addIndex(index-start, item);
+							//System.out.println("INDEX filled next isn't filled: " + this.chunks);
+						}
 					}
 
 				} else {
 					// put right in this chunk, there's space.
-					chunk.addIndex(index, item);
+					System.out.println(chunk.size());
+					System.out.println("INDEX:" + index + " item:" + item);
+					
+					if (chunkIndex == 0) {
+						chunk.addIndex(index, item);
+					} else {
+						chunk.addIndex(index-start, item);
+					}
+					System.out.println("not filled: " + this.chunks);
 				}	
 				// upon adding, return.
 				return;
@@ -162,6 +208,7 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 			start = end;
 			chunkIndex++;
 		}
+		//System.out.println("error");
 		throw new BadIndexError(index);
 
 	}
